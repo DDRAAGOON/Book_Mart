@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin Sign In | Book Mart</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="login-page">
+  <main class="login-card">
+    <a class="back-link" href="/">&larr; Back to cashier</a>
+    <div class="login-brand">Book Mart</div>
+    <h1>Admin sign in</h1>
+    <p class="muted">Sign in to manage inventory and reports.</p>
+    {% if error %}<div class="alert alert-error">{{ error }}</div>{% endif %}
+    <form method="post" action="/admin/login">
+      <label for="username">Username</label>
+      <input id="username" name="username" autocomplete="username" required autofocus>
+      <label for="password">Password</label>
+      <input id="password" name="password" type="password" autocomplete="current-password" required>
+      <button class="button button-primary button-large" type="submit">Sign in</button>
+    </form>
+    <p class="muted small">First login: admin / 123456. Change this in Settings.</p>
+  </main>
+</body>
+</html>

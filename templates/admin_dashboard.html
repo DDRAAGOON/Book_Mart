@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin Dashboard | Book Mart</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  
+  <!-- CRITICAL FIX: Inline styles to force Sidebar buttons to look correct immediately -->
+  <style>
+    .sidebar {
+        background: #1e2c38 !important;
+        color: white !important;
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        width: 225px;
+        position: fixed;
+        left: 0;
+        top: 0;
+        z-index: 10;
+        padding: 0; /* Reset padding to control it manually */
+    }
+    
+    .sidebar-brand {
+        color: #246b58 !important; /* Brand Green */
+        font-size: 21px;
+        font-weight: 800;
+        padding: 20px 15px !important;
+        text-decoration: none;
+        display: block;
+        border-bottom: 1px solid #314552;
+    }
+
+    .side-nav {
+        display: grid;
+        gap: 5px;
+        padding: 10px !important;
+        flex: 1; /* Take remaining space */
+    }
+
+    /* FORCE BUTTON STYLE FOR NAV ITEMS */
+    .nav-item {
+        width: 100% !important;
+        text-align: left !important;
+        background: transparent !important;
+        border: none !important;
+        color: #cfdae0 !important; /* Light Gray Text */
+        cursor: pointer !important;
+        padding: 12px 15px !important;
+        border-radius: 7px !important;
+        font-size: 14px !important;
+        transition: all 0.2s ease !important;
+        display: block !important;
+        font-family: inherit !important;
+    }
+
+    .nav-item:hover, 
+    .nav-item.active {
+        background: #314552 !important; /* Darker Blue Background */
+        color: #ffffff !important; /* White Text */
+    }
+
+    .sidebar-bottom {
+        margin-top: auto;
+        padding: 10px !important;
+        border-top: 1px solid #314552;
+    }
+
+    .logout-button {
+        width: 100% !important;
+        text-align: left !important;
+        background: transparent !important;
+        border: none !important;
+        color: #f2b6af !important; /* Soft Red/Pink for Logout */
+        cursor: pointer !important;
+        padding: 12px 15px !important;
+        border-radius: 7px !important;
+        font-size: 14px !important;
+        transition: all 0.2s ease !important;
+    }
+
+    .logout-button:hover {
+        background: #314552 !important;
+        color: #ffcccc !important;
+    }
+  </style>
+</head>
+<body class="admin-page">
+  
+  <!-- Mobile Menu Toggle -->
+  <button id="menu-toggle" class="mobile-menu button button-secondary" aria-label="Toggle navigation">☰</button>
+  <div id="nav-shade" class="nav-shade"></div>
+
+  <!-- Sidebar Navigation -->
+  <aside id="sidebar" class="sidebar">
+    <a class="sidebar-brand" href="/">Book Mart</a>
+    
+    <nav class="side-nav" aria-label="Admin navigation">
+      <button class="nav-item active" data-view="dashboard">Dashboard</button>
+      <button class="nav-item" data-view="books">Books</button>
+      <button class="nav-item" data-view="drinks">Drinks</button>
+      <button class="nav-item" data-view="materials">Materials</button>
+      <button class="nav-item" data-view="reports">Reports</button>
+      <button class="nav-item" data-view="settings">Settings</button>
+    </nav>
+    
+    <div class="sidebar-bottom">
+      <a class="nav-item" href="/">Open cashier</a>
+      <form method="post" action="/admin/logout" style="margin-top: 5px;">
+        <button type="submit" class="logout-button">Sign out</button>
+      </form>
+    </div>
+  </aside>
+
+  <!-- Main Content Area -->
+  <main class="admin-main">
+    <header class="admin-topbar">
+      <div>
+        <p class="eyebrow">BOOK MART MANAGEMENT</p>
+        <h1 id="page-title">Dashboard</h1>
+      </div>
+      <span id="today-date" class="muted"></span>
+    </header>
+    
+    <div id="admin-message" class="form-message" role="status"></div>
+
+    <!-- Views Sections -->
+    <section id="view-dashboard" class="admin-view">
+      <div class="metric-grid">
+        <article class="metric-card"><span>Today's sales</span><strong id="metric-sales">0.00</strong></article>
+        <article class="metric-card"><span>Today's profit</span><strong id="metric-profit">0.00</strong></article>
+        <article class="metric-card"><span>Low-stock alerts</span><strong id="metric-alerts">0</strong></article>
+      </div>
+      <article class="panel">
+        <div class="panel-heading"><h2>Items to restock</h2></div>
+        <div id="low-stock-list" class="table-wrap"></div>
+      </article>
+    </section>
+
+    <!-- These sections will be populated dynamically by JS -->
+    <section id="view-books" class="admin-view" hidden></section>
+    <section id="view-drinks" class="admin-view" hidden></section>
+    <section id="view-materials" class="admin-view" hidden></section>
+    <section id="view-reports" class="admin-view" hidden></section>
+    <section id="view-settings" class="admin-view" hidden></section>
+  </main>
+
+  <!-- JavaScript Link -->
+  <script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+</body>
+</html>

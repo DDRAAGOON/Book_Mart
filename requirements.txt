@@ -1,0 +1,5 @@
+# Python 3.9, including 32-bit builds suitable for Windows 7.
+Flask==2.2.5
+Werkzeug==2.2.3
+pywebview==4.4.1
+pyinstaller==5.13.2
