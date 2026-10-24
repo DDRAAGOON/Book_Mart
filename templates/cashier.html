@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Book Mart - Cashier POS</title>
+    <title>{{ shop_name }} - نقطة البيع</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <style>
         /* --- Reset & Base Styles --- */
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
@@ -396,21 +397,65 @@
             font-style: italic;
         }
 
+        /* Arabic RTL and shared maroon, cream, and gold theme overrides. */
+        body { background-color: #ece4d6; color: #2b2118; direction: rtl; }
+        .sidebar-nav { background: #f8f3ea; border: 0; border-left: 1px solid #ded3c2; box-shadow: -2px 0 5px rgba(43,33,24,.05); }
+        .nav-item { color: #8a7d6b; }
+        .nav-item:hover, .nav-item.active { background: #f3ead8; color: #6e1423; }
+        .nav-item span.tooltip { left: auto; right: 60px; background: #2b2118; }
+        .top-header, .category-tabs-bar, .cart-panel, .cart-header, .cart-footer { background: #f8f3ea; border-color: #ded3c2; }
+        .brand-logo { color: #6e1423; }
+        .global-search-input, .local-product-search { background: #fffaf2; border-color: #ded3c2; }
+        .global-search-input:focus, .local-product-search:focus { border-color: #9a7b1f; box-shadow: 0 0 0 3px rgba(154,123,31,.12); }
+        .search-icon-global { left: auto; right: 12px; }
+        .global-search-input { padding: 10px 40px 10px 15px; }
+        .admin-link-btn { color: #6e1423; border-color: #e2c5bf; background: #f8e9e4; }
+        .admin-link-btn:hover { background: #f1d9d2; border-color: #d4a49a; }
+        .cat-tab { background: #fffaf2; border-color: #ded3c2; color: #2b2118; }
+        .cat-tab:hover { background: #f3ead8; border-color: #cdbb91; }
+        .cat-tab.active { background: #6e1423; border-color: #6e1423; box-shadow: 0 2px 4px rgba(110,20,35,.2); }
+        .products-section { background: #ece4d6; }
+        .product-card { background: #f8f3ea; }
+        .product-card:hover:not(:disabled) { border-color: #9a7b1f; box-shadow: 0 4px 12px rgba(154,123,31,.15); }
+        .product-card:disabled { border-color: #b3261e; background: #f9e9e5; }
+        .p-name, .cart-title, .cart-line-name, .ci-total, .total-row { color: #2b2118; }
+        .p-price, .order-amount-text, .di-price { color: #6e1423; }
+        .p-type-badge { background: #f3ead8; color: #80651a; }
+        .cart-count-badge { background: #9a7b1f; }
+        .pay-btn { background: #6e1423; box-shadow: 0 4px 6px rgba(110,20,35,.2); }
+        .pay-btn:hover:not(:disabled) { background: #520f1a; box-shadow: 0 6px 8px rgba(110,20,35,.3); }
+        .pay-btn:disabled { background: #c9bfae; }
+        .form-message.success { background: #eee7d5; color: #6e1423; }
+        .form-message.error { background: #f9e9e5; color: #b3261e; }
+        .dropdown-item:hover { background: #f3ead8; }
+        .modal-title { color: #2b2118; }
+        .modal-header { border-color: #ded3c2; }
+        .close-modal-btn:hover { color: #b3261e; }
+        .order-amount-text { color: #6e1423; }
+        .btn-secondary { background: #eee7dc; color: #2b2118; }
+        .btn-secondary:hover { background: #e5dac8; }
+        .btn-danger-light { background: #f8e9e4; border-color: #e2c5bf; color: #b3261e; }
+        .btn-danger-light:hover { background: #f1d9d2; border-color: #d4a49a; }
+        .di-name { color: #2b2118; }
+        .di-type { color: #8a7d6b; }
+        .cart-line-sub { direction: rtl; }
+        .ci-total, .cart-line-sub, .p-price, .total-row > span:last-child { unicode-bidi: isolate; }
+
     </style>
 </head>
 <body>
 
 <!-- 1. Left Sidebar Navigation -->
 <nav class="sidebar-nav">
-    <div class="nav-item active" onclick="location.reload()" title="Refresh Page">
-        🏠 <span class="tooltip">Home / POS</span>
+    <div class="nav-item active" onclick="location.reload()" title="تحديث الصفحة">
+        🏠 <span class="tooltip">الرئيسية / نقطة البيع</span>
     </div>
-    <div class="nav-item" onclick="alert('Full Order History available in Admin Dashboard')" title="View Recent Sales">
-        📜 <span class="tooltip">Recent Orders</span>
+    <div class="nav-item" onclick="alert('سجل المبيعات الكامل متاح في لوحة الإدارة')" title="عرض المبيعات الأخيرة">
+        📜 <span class="tooltip">الطلبات الأخيرة</span>
     </div>
     <!-- Changed to open modal instead of redirecting -->
-    <div class="nav-item" onclick="window.openSettingsModal()" title="Cashier Tools">
-        ⚙️ <span class="tooltip">Cashier Settings</span>
+    <div class="nav-item" onclick="window.openSettingsModal()" title="أدوات الكاشير">
+        ⚙️ <span class="tooltip">إعدادات الكاشير</span>
     </div>
 </nav>
 
@@ -419,25 +464,26 @@
     
     <!-- Top Header with Global Search -->
     <header class="top-header">
-        <div class="brand-logo">Book Mart</div>
+        <div class="brand-logo">
+            {% if logo_available %}<img class="cashier-logo-image" src="{{ url_for('static', filename='img/logo.png') }}" alt="">{% endif %}
+            <bdi id="cashier-shop-name" dir="{{ shop_name_dir }}">{{ shop_name }}</bdi>
+        </div>
         
         <div class="global-search-container">
             <span class="search-icon-global">🔍</span>
             <!-- This input triggers the main product filter via JS -->
-            <input type="text" id="product-search" class="global-search-input" placeholder="Search products (Books, Drinks)...">
+            <input type="text" id="product-search" class="global-search-input" placeholder="ابحث عن كتاب أو مشروب..." aria-label="البحث عن المنتجات">
         </div>
 
-        <a href="/admin/login" class="admin-link-btn" title="Go to Admin Dashboard">
-            🔒 Admin Access
+        <a href="/admin/login" class="admin-link-btn" title="فتح لوحة الإدارة">
+            🔒 دخول الإدارة
         </a>
     </header>
 
     <!-- CATEGORY TABS BAR (NEW FEATURE) -->
     <div id="category-tabs" class="category-tabs-bar">
-        <button class="cat-tab active" data-cat="all">All Items</button>
-        <button class="cat-tab" data-cat="book">📚 Books</button>
-        <button class="cat-tab" data-cat="hot">☕ Hot Drinks</button>
-        <button class="cat-tab" data-cat="cold">❄️ Cold Drinks</button>
+        <button class="cat-tab active" data-cat="all">الكل</button>
+        <button class="cat-tab" data-cat="book">الكتب</button>
     </div>
 
     <!-- Content Split: Products Grid + Cart Panel -->
@@ -447,7 +493,7 @@
         <div class="products-section" id="product-grid">
             <!-- Initial Loading State -->
             <div style="grid-column: span 4; text-align:center; color:#9ca3af; padding:40px;">
-                Loading products...
+                جارٍ تحميل المنتجات...
             </div>
         </div>
 
@@ -455,13 +501,13 @@
         <aside class="cart-panel">
             <div class="cart-header">
                 <div class="cart-title">
-                    Current Sale 
+                    البيع الحالي
                     <span class="cart-count-badge" id="product-count">0</span>
                 </div>
                 
                 <!-- QUICK SEARCH INPUT (Restored & Active) -->
                 <div style="position: relative; margin-top: 10px;">
-                    <input type="text" id="quick-product-search" class="local-product-search" placeholder="🔍 Quick find product...">
+                    <input type="text" id="quick-product-search" class="local-product-search" placeholder="🔍 بحث سريع عن منتج..." aria-label="بحث سريع عن منتج">
                     
                     <!-- Dropdown Results for Quick Search -->
                     <div id="quick-search-results" class="dropdown-results" style="display:none;">
@@ -471,16 +517,16 @@
             </div>
 
             <div class="cart-items-list" id="cart-items">
-                <p class="empty-message">Tap a product to begin.</p>
+                <p class="empty-message">اختر منتجًا لبدء البيع.</p>
             </div>
 
             <div class="cart-footer">
                 <div class="total-row">
-                    <span class="total-label">Total Amount</span>
-                    <span><span id="cart-total">0.00</span> EGP</span>
+                    <span class="total-label">الإجمالي</span>
+                    <span dir="ltr"><span id="cart-total">0.00</span> ج.م</span>
                 </div>
                 <button class="pay-btn" id="pay-button" disabled>
-                    Pay & Print 🖨️
+                    دفع وطباعة 🖨️
                 </button>
                 <!-- Message Container for Success/Error feedback -->
                 <div id="cart-message" class="form-message"></div>
@@ -493,21 +539,21 @@
 <div id="settings-modal" class="modal-overlay">
     <div class="modal-content">
         <div class="modal-header">
-            <h3 class="modal-title">Cashier Tools</h3>
-            <button class="close-modal-btn" onclick="window.closeSettingsModal()">&times;</button>
+            <h3 class="modal-title">أدوات الكاشير</h3>
+            <button class="close-modal-btn" onclick="window.closeSettingsModal()" aria-label="إغلاق">&times;</button>
         </div>
         
         <div class="recent-orders-section">
-            <h4>Last 5 Completed Sales</h4>
+            <h4>آخر 5 عمليات بيع مكتملة</h4>
             <ul id="recent-orders-list">
-                <li>Loading history...</li>
+                <li>جارٍ تحميل سجل المبيعات...</li>
             </ul>
         </div>
 
         <div class="modal-actions">
-            <button class="btn-secondary" onclick="window.closeSettingsModal()">Close</button>
+            <button class="btn-secondary" onclick="window.closeSettingsModal()">إغلاق</button>
             <!-- Placeholder for future functionality like Void Last Sale -->
-            <button class="btn-danger-light" onclick="alert('Void Last Sale feature coming soon!')">Void Last Sale</button>
+            <button id="void-last-order" class="btn-danger-light" type="button" disabled>إلغاء آخر عملية بيع</button>
         </div>
     </div>
 </div>

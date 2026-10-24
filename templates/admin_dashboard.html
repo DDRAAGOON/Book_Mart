@@ -1,114 +1,40 @@
 <!doctype html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Admin Dashboard | Book Mart</title>
+  <title>لوحة الإدارة | {{ shop_name }}</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
   
-  <!-- CRITICAL FIX: Inline styles to force Sidebar buttons to look correct immediately -->
-  <style>
-    .sidebar {
-        background: #1e2c38 !important;
-        color: white !important;
-        display: flex;
-        flex-direction: column;
-        height: 100vh;
-        width: 225px;
-        position: fixed;
-        left: 0;
-        top: 0;
-        z-index: 10;
-        padding: 0; /* Reset padding to control it manually */
-    }
-    
-    .sidebar-brand {
-        color: #246b58 !important; /* Brand Green */
-        font-size: 21px;
-        font-weight: 800;
-        padding: 20px 15px !important;
-        text-decoration: none;
-        display: block;
-        border-bottom: 1px solid #314552;
-    }
-
-    .side-nav {
-        display: grid;
-        gap: 5px;
-        padding: 10px !important;
-        flex: 1; /* Take remaining space */
-    }
-
-    /* FORCE BUTTON STYLE FOR NAV ITEMS */
-    .nav-item {
-        width: 100% !important;
-        text-align: left !important;
-        background: transparent !important;
-        border: none !important;
-        color: #cfdae0 !important; /* Light Gray Text */
-        cursor: pointer !important;
-        padding: 12px 15px !important;
-        border-radius: 7px !important;
-        font-size: 14px !important;
-        transition: all 0.2s ease !important;
-        display: block !important;
-        font-family: inherit !important;
-    }
-
-    .nav-item:hover, 
-    .nav-item.active {
-        background: #314552 !important; /* Darker Blue Background */
-        color: #ffffff !important; /* White Text */
-    }
-
-    .sidebar-bottom {
-        margin-top: auto;
-        padding: 10px !important;
-        border-top: 1px solid #314552;
-    }
-
-    .logout-button {
-        width: 100% !important;
-        text-align: left !important;
-        background: transparent !important;
-        border: none !important;
-        color: #f2b6af !important; /* Soft Red/Pink for Logout */
-        cursor: pointer !important;
-        padding: 12px 15px !important;
-        border-radius: 7px !important;
-        font-size: 14px !important;
-        transition: all 0.2s ease !important;
-    }
-
-    .logout-button:hover {
-        background: #314552 !important;
-        color: #ffcccc !important;
-    }
-  </style>
 </head>
 <body class="admin-page">
   
   <!-- Mobile Menu Toggle -->
-  <button id="menu-toggle" class="mobile-menu button button-secondary" aria-label="Toggle navigation">☰</button>
+  <button id="menu-toggle" class="mobile-menu button button-secondary" aria-label="فتح القائمة">☰</button>
   <div id="nav-shade" class="nav-shade"></div>
 
   <!-- Sidebar Navigation -->
   <aside id="sidebar" class="sidebar">
-    <a class="sidebar-brand" href="/">Book Mart</a>
+    <a class="sidebar-brand" href="/">
+      {% if logo_available %}<img class="sidebar-logo-image" src="{{ url_for('static', filename='img/logo.png') }}" alt="">{% endif %}
+      <bdi id="admin-shop-name" dir="{{ shop_name_dir }}">{{ shop_name }}</bdi>
+    </a>
     
-    <nav class="side-nav" aria-label="Admin navigation">
-      <button class="nav-item active" data-view="dashboard">Dashboard</button>
-      <button class="nav-item" data-view="books">Books</button>
-      <button class="nav-item" data-view="drinks">Drinks</button>
-      <button class="nav-item" data-view="materials">Materials</button>
-      <button class="nav-item" data-view="reports">Reports</button>
-      <button class="nav-item" data-view="settings">Settings</button>
+    <nav class="side-nav" aria-label="قائمة الإدارة">
+      <button class="nav-item nav-item-admin active" data-view="dashboard"><span class="nav-icon">📊</span><span>لوحة المعلومات</span></button>
+      <button class="nav-item nav-item-admin" data-view="books"><span class="nav-icon">📖</span><span>الكتب</span></button>
+      <button class="nav-item nav-item-admin" data-view="drinks"><span class="nav-icon">☕</span><span>المشروبات</span></button>
+      <button class="nav-item nav-item-admin" data-view="materials"><span class="nav-icon">🧱</span><span>المواد</span></button>
+      <button class="nav-item nav-item-admin" data-view="retail"><span class="nav-icon">🛒</span><span>منتجات جاهزة</span></button>
+      <button class="nav-item nav-item-admin" data-view="categories"><span class="nav-icon">🏷️</span><span>التصنيفات</span></button>
+      <button class="nav-item nav-item-admin" data-view="reports"><span class="nav-icon">📑</span><span>التقارير</span></button>
+      <button class="nav-item nav-item-admin" data-view="settings"><span class="nav-icon">⚙️</span><span>الإعدادات</span></button>
     </nav>
     
     <div class="sidebar-bottom">
-      <a class="nav-item" href="/">Open cashier</a>
+      <a class="nav-item-admin side-cashier-link" href="/"><span class="nav-icon">🖥️</span><span>فتح شاشة الكاشير</span></a>
       <form method="post" action="/admin/logout" style="margin-top: 5px;">
-        <button type="submit" class="logout-button">Sign out</button>
+        <button type="submit" class="logout-button"><span class="nav-icon">↩</span><span>تسجيل الخروج</span></button>
       </form>
     </div>
   </aside>
@@ -117,8 +43,8 @@
   <main class="admin-main">
     <header class="admin-topbar">
       <div>
-        <p class="eyebrow">BOOK MART MANAGEMENT</p>
-        <h1 id="page-title">Dashboard</h1>
+        <p class="eyebrow">إدارة <bdi id="admin-eyebrow-shop-name" dir="{{ shop_name_dir }}">{{ shop_name }}</bdi></p>
+        <h1 id="page-title">لوحة المعلومات</h1>
       </div>
       <span id="today-date" class="muted"></span>
     </header>
@@ -128,12 +54,12 @@
     <!-- Views Sections -->
     <section id="view-dashboard" class="admin-view">
       <div class="metric-grid">
-        <article class="metric-card"><span>Today's sales</span><strong id="metric-sales">0.00</strong></article>
-        <article class="metric-card"><span>Today's profit</span><strong id="metric-profit">0.00</strong></article>
-        <article class="metric-card"><span>Low-stock alerts</span><strong id="metric-alerts">0</strong></article>
+        <article class="metric-card"><span>مبيعات اليوم</span><strong id="metric-sales" dir="ltr">0.00</strong></article>
+        <article class="metric-card"><span>أرباح اليوم</span><strong id="metric-profit" dir="ltr">0.00</strong></article>
+        <article class="metric-card"><span>تنبيهات انخفاض المخزون</span><strong id="metric-alerts" dir="ltr">0</strong></article>
       </div>
       <article class="panel">
-        <div class="panel-heading"><h2>Items to restock</h2></div>
+        <div class="panel-heading"><h2>مواد تحتاج إلى إعادة التخزين</h2></div>
         <div id="low-stock-list" class="table-wrap"></div>
       </article>
     </section>
@@ -142,6 +68,8 @@
     <section id="view-books" class="admin-view" hidden></section>
     <section id="view-drinks" class="admin-view" hidden></section>
     <section id="view-materials" class="admin-view" hidden></section>
+    <section id="view-retail" class="admin-view" hidden></section>
+    <section id="view-categories" class="admin-view" hidden></section>
     <section id="view-reports" class="admin-view" hidden></section>
     <section id="view-settings" class="admin-view" hidden></section>
   </main>

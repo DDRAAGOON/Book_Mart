@@ -1,26 +1,27 @@
 <!doctype html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Admin Sign In | Book Mart</title>
+  <title>تسجيل دخول الإدارة | {{ shop_name }}</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body class="login-page">
   <main class="login-card">
-    <a class="back-link" href="/">&larr; Back to cashier</a>
-    <div class="login-brand">Book Mart</div>
-    <h1>Admin sign in</h1>
-    <p class="muted">Sign in to manage inventory and reports.</p>
+    <a class="back-link" href="/">العودة إلى الكاشير</a>
+    {% if logo_available %}<img class="brand-logo-image" src="{{ url_for('static', filename='img/logo.png') }}" alt="">{% endif %}
+    <div class="login-brand"><bdi id="login-shop-name" dir="{{ shop_name_dir }}">{{ shop_name }}</bdi></div>
+    <h1>تسجيل دخول الإدارة</h1>
+    <p class="muted">سجّل الدخول لإدارة المخزون والتقارير.</p>
     {% if error %}<div class="alert alert-error">{{ error }}</div>{% endif %}
     <form method="post" action="/admin/login">
-      <label for="username">Username</label>
+      <label for="username">اسم المستخدم</label>
       <input id="username" name="username" autocomplete="username" required autofocus>
-      <label for="password">Password</label>
+      <label for="password">كلمة المرور</label>
       <input id="password" name="password" type="password" autocomplete="current-password" required>
-      <button class="button button-primary button-large" type="submit">Sign in</button>
+      <button class="button button-primary button-large" type="submit">تسجيل الدخول</button>
     </form>
-    <p class="muted small">First login: admin / 123456. Change this in Settings.</p>
+    <p class="muted small">بيانات الدخول الأولية: admin / <bdi dir="ltr">123456</bdi>. غيّر كلمة المرور من الإعدادات.</p>
   </main>
 </body>
 </html>
